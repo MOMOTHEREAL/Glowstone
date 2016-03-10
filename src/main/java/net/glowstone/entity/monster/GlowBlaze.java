@@ -12,10 +12,10 @@ public class GlowBlaze extends GlowMonster implements Blaze {
     }
 
     public boolean isOnFire() {
-        return metadata.getByte(MetadataIndex.BLAZE_ON_FIRE) == 1;
+        return metadata.getBoolean(MetadataIndex.BLAZE_ON_FIRE);
     }
 
     public void setOnFire(boolean onFire) {
-        metadata.set(MetadataIndex.BLAZE_ON_FIRE, onFire ? (byte) 1 : (byte) 0);
+        metadata.set(MetadataIndex.BLAZE_ON_FIRE, onFire);
     }
 }
