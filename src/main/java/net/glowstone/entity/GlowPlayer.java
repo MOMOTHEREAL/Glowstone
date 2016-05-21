@@ -8,8 +8,11 @@ import io.netty.buffer.Unpooled;
 import lombok.Getter;
 import lombok.Setter;
 import net.glowstone.ChunkManager.ChunkLock;
-import net.glowstone.*;
+import net.glowstone.EventFactory;
+import net.glowstone.GlowChunk;
 import net.glowstone.GlowChunk.Key;
+import net.glowstone.GlowOfflinePlayer;
+import net.glowstone.GlowWorld;
 import net.glowstone.block.GlowBlock;
 import net.glowstone.block.ItemTable;
 import net.glowstone.block.blocktype.BlockBed;
@@ -324,18 +327,7 @@ public final class GlowPlayer extends GlowHumanEntity implements Player {
 
         // send login response
         session.send(new LoginSuccessMessage(profile.getUniqueId().toString(), profile.getName()));
-
-        switch (session.getVersion()) {
-            case GlowServer.LEGACY_PROTOCOL_VERSION:
-                session.setProtocol(ProtocolType.PLAY_107);
-                break;
-            case GlowServer.COMPATIBLE_PROTOCOL_VERSION:
-                session.setProtocol(ProtocolType.PLAY_109);
-                break;
-            default:
-                session.setProtocol(ProtocolType.PLAY);
-                break;
-        }
+        session.setProtocol(ProtocolType.PLAY);
 
         // read data from player reader
         hasPlayedBefore = reader.hasPlayedBefore();
@@ -704,11 +696,7 @@ public final class GlowPlayer extends GlowHumanEntity implements Player {
 
         for (Key key : newChunks) {
             GlowChunk chunk = world.getChunkAt(key.getX(), key.getZ());
-            if (session.getVersion() == GlowServer.LEGACY_PROTOCOL_VERSION || session.getVersion() == GlowServer.COMPATIBLE_PROTOCOL_VERSION) {
-                session.send(chunk.toMessage(skylight).toLegacy());
-            } else {
-                session.send(chunk.toMessage(skylight));
-            }
+            session.send(chunk.toMessage(skylight));
         }
 
         // send visible tile entity data
@@ -892,7 +880,7 @@ public final class GlowPlayer extends GlowHumanEntity implements Player {
      */
     public void setSettings(ClientSettings settings) {
         this.settings = settings;
-       // metadata.set(MetadataIndex.PLAYER_SKIN_FLAGS, settings.getSkinFlags()); // TODO 1.9 - This has been removed
+        // metadata.set(MetadataIndex.PLAYER_SKIN_FLAGS, settings.getSkinFlags()); // TODO 1.9 - This has been removed
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -1998,13 +1986,9 @@ public final class GlowPlayer extends GlowHumanEntity implements Player {
         checkNotNull(lines, "lines cannot be null");
         checkArgument(lines.length == 4, "lines.length must equal 4");
 
-        if (session.getProtocolType() == ProtocolType.PLAY) {
-            CompoundTag tag = new CompoundTag();
-            sign.saveNbt(tag);
-            afterBlockChanges.add(new UpdateBlockEntityMessage(location.getBlockX(), location.getBlockY(), location.getBlockZ(), GlowBlockEntity.SIGN.getValue(), tag));
-        } else {
-            afterBlockChanges.add(new UpdateSignMessage(location.getBlockX(), location.getBlockY(), location.getBlockZ(), lines));
-        }
+        CompoundTag tag = new CompoundTag();
+        sign.saveNbt(tag);
+        afterBlockChanges.add(new UpdateBlockEntityMessage(location.getBlockX(), location.getBlockY(), location.getBlockZ(), GlowBlockEntity.SIGN.getValue(), tag));
     }
 
     /**
