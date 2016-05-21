@@ -31,9 +31,7 @@ public class GlowZombie extends GlowMonster implements Zombie {
     @Override
     public List<Message> createSpawnMessage() {
         metadata.set(MetadataIndex.ZOMBIE_IS_CONVERTING, conversionTime > 0);
-        if (this instanceof GlowHusk) {
-            metadata.set(MetadataIndex.ZOMBIE_IS_VILLAGER, 6);
-        }
+        metadata.set(MetadataIndex.ZOMBIE_IS_VILLAGER, getZombieType().getId());
         return super.createSpawnMessage();
     }
 

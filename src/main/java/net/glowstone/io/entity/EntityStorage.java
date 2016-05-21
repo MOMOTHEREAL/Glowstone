@@ -64,6 +64,8 @@ public final class EntityStorage {
         bind(new ZombieStore<>(GlowZombie.GlowHusk.class, "Husk"));
         bind(new PigZombieStore());
         bind(new SkeletonStore());
+        bind(new SkeletonStore(GlowSkeleton.GlowStray.class, "Stray"));
+        bind(new SkeletonStore(GlowSkeleton.GlowWitherSkeleton.class, "WitherSkeleton"));
         bind(new MonsterStore<>(GlowBlaze.class, "Blaze"));
         bind(new MonsterStore<>(GlowCaveSpider.class, "CaveSpider"));
         bind(new MonsterStore<>(GlowSpider.class, "Spider"));

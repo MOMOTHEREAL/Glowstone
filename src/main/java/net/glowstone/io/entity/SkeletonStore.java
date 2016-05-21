@@ -7,7 +7,11 @@ import org.bukkit.entity.Skeleton.SkeletonType;
 class SkeletonStore extends MonsterStore<GlowSkeleton> {
 
     public SkeletonStore() {
-        super(GlowSkeleton.class, "Skeleton");
+        super(GlowSkeleton.class, "Zombie");
+    }
+
+    public SkeletonStore(Class clazz, String id) {
+        super(clazz, id);
     }
 
     @Override
