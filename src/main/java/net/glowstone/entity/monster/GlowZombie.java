@@ -13,19 +13,27 @@ public class GlowZombie extends GlowMonster implements Zombie {
 
     private int conversionTime = -1;
     private boolean canBreakDoors;
-    private Profession villagerProfession = Profession.FARMER;
+    private ZombieType type;
 
     public GlowZombie(Location loc) {
         this(loc, EntityType.ZOMBIE);
     }
 
     public GlowZombie(Location loc, EntityType type) {
+        this(loc, type, ZombieType.DEFAULT);
+    }
+
+    public GlowZombie(Location loc, EntityType type, ZombieType zombieType) {
         super(loc, type, 20);
+        this.type = zombieType;
     }
 
     @Override
     public List<Message> createSpawnMessage() {
         metadata.set(MetadataIndex.ZOMBIE_IS_CONVERTING, conversionTime > 0);
+        if (this instanceof GlowHusk) {
+            metadata.set(MetadataIndex.ZOMBIE_IS_VILLAGER, 6);
+        }
         return super.createSpawnMessage();
     }
 
@@ -41,23 +49,33 @@ public class GlowZombie extends GlowMonster implements Zombie {
 
     @Override
     public boolean isVillager() {
-        return metadata.getInt(MetadataIndex.ZOMBIE_IS_VILLAGER) > 0;
+        return type.getId() > 0 && type.getId() < 6;
     }
 
     @Override
     public void setVillager(boolean value) {
-        metadata.set(MetadataIndex.ZOMBIE_IS_VILLAGER, value ? villagerProfession.getId() + 1 : 0);
+        metadata.set(MetadataIndex.ZOMBIE_IS_VILLAGER, value ? getZombieType().getId() - 1 : 0);
     }
 
     @Override
     public void setVillagerProfession(Profession profession) {
-        this.villagerProfession = profession;
-        metadata.set(MetadataIndex.ZOMBIE_IS_VILLAGER, profession.getId() + 1);
+        setZombieType(ZombieType.get(profession.getId() + 1));
     }
 
     @Override
     public Profession getVillagerProfession() {
-        return villagerProfession;
+        return Profession.getProfession(getZombieType().getId() - 1);
+    }
+
+    @Override
+    public void setZombieType(ZombieType type) {
+        this.type = type;
+        metadata.set(MetadataIndex.ZOMBIE_IS_VILLAGER, type.getId());
+    }
+
+    @Override
+    public ZombieType getZombieType() {
+        return type;
     }
 
     public int getConversionTime() {
@@ -75,5 +93,16 @@ public class GlowZombie extends GlowMonster implements Zombie {
 
     public void setCanBreakDoors(boolean canBreakDoors) {
         this.canBreakDoors = canBreakDoors;
+    }
+
+    public static class GlowHusk extends GlowZombie implements Zombie.Husk {
+
+        public GlowHusk(Location loc) {
+            this(loc, EntityType.HUSK);
+        }
+
+        public GlowHusk(Location loc, EntityType type) {
+            super(loc, type, ZombieType.HUSK);
+        }
     }
 }

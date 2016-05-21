@@ -3,6 +3,7 @@ package net.glowstone.io.entity;
 import net.glowstone.entity.monster.GlowZombie;
 import net.glowstone.util.nbt.CompoundTag;
 import org.bukkit.entity.Villager;
+import org.bukkit.entity.Zombie;
 
 class ZombieStore<T extends GlowZombie> extends MonsterStore<GlowZombie> {
 
@@ -34,6 +35,12 @@ class ZombieStore<T extends GlowZombie> extends MonsterStore<GlowZombie> {
             entity.setVillagerProfession(Villager.Profession.getProfession(tag.getInt("VillagerProfession")));
         }
 
+        if (tag.isInt("ZombieType")) {
+            entity.setZombieType(Zombie.ZombieType.get(tag.getInt("ZombieType")));
+        } else {
+            entity.setZombieType(Zombie.ZombieType.DEFAULT);
+        }
+
         if (tag.isInt("ConversionTime")) {
             entity.setConversionTime(tag.getInt("ConversionTime"));
         } else {
@@ -55,5 +62,6 @@ class ZombieStore<T extends GlowZombie> extends MonsterStore<GlowZombie> {
         tag.putBool("IsBaby", entity.isBaby());
         tag.putInt("ConversionTime", entity.getConversionTime());
         tag.putBool("CanBreakDoors", entity.isCanBreakDoors());
+        tag.putInt("ZombieType", entity.getZombieType().getId());
     }
 }
