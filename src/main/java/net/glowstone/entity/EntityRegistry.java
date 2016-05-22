@@ -76,6 +76,7 @@ public class EntityRegistry {
                     .put(HUSK, GlowZombie.GlowHusk.class)
                     .put(STRAY, GlowSkeleton.GlowStray.class)
                     .put(WITHER_SKELETON, GlowSkeleton.GlowWitherSkeleton.class)
+                    .put(POLAR_BEAR, GlowPolarBear.class)
                     .build();
 
     public static Class<? extends GlowEntity> getEntity(short id) {

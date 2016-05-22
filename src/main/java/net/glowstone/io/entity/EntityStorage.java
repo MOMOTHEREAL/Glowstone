@@ -49,6 +49,7 @@ public final class EntityStorage {
         bind(new VillagerStore());
         bind(new AgeableStore<>(GlowCow.class, "Cow"));
         bind(new AgeableStore<>(GlowMooshroom.class, "MushroomCow"));
+        bind(new AgeableStore<>(GlowPolarBear.class, "PolarBear"));
         bind(new WaterMobStore<>(GlowSquid.class, "Squid"));
 
         // LivingEntities - Hostile Entities
