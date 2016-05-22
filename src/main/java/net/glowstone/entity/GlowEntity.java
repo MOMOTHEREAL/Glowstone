@@ -136,6 +136,10 @@ public abstract class GlowEntity implements Entity {
      */
     private GlowEntity passenger;
     /**
+     * Whether the entity is not affected by gravity.
+     */
+    private boolean noGravity = false;
+    /**
      * Creates an entity and adds it to the specified world.
      *
      * @param location The location of the entity.
@@ -733,6 +737,15 @@ public abstract class GlowEntity implements Entity {
 
     public void setOnGround(boolean onGround) {
         this.onGround = onGround;
+    }
+
+    public boolean isNoGravity() {
+        return noGravity;
+    }
+
+    public void setNoGravity(boolean noGravity) {
+        metadata.set(MetadataIndex.NOGRAVITY, noGravity ? 1 : 0);
+        this.noGravity = noGravity;
     }
 
     @Override

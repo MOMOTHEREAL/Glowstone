@@ -71,6 +71,9 @@ abstract class EntityStore<T extends GlowEntity> {
         if (tag.isByte("OnGround")) {
             entity.setOnGround(tag.getBool("OnGround"));
         }
+        if (tag.isByte("NoGravity")) {
+            entity.setNoGravity(tag.getBool("NoGravity"));
+        }
 
         if (tag.isLong("UUIDMost") && tag.isLong("UUIDLeast")) {
             UUID uuid = new UUID(tag.getLong("UUIDMost"), tag.getLong("UUIDLeast"));
@@ -100,6 +103,7 @@ abstract class EntityStore<T extends GlowEntity> {
         tag.putFloat("FallDistance", entity.getFallDistance());
         tag.putShort("Fire", entity.getFireTicks());
         tag.putBool("OnGround", entity.isOnGround());
+        tag.putBool("NoGravity", entity.isNoGravity());
 
         tag.putLong("UUIDMost", entity.getUniqueId().getMostSignificantBits());
         tag.putLong("UUIDLeast", entity.getUniqueId().getLeastSignificantBits());
