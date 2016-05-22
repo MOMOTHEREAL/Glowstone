@@ -744,7 +744,7 @@ public abstract class GlowEntity implements Entity {
     }
 
     public void setNoGravity(boolean noGravity) {
-        metadata.set(MetadataIndex.NOGRAVITY, noGravity ? 1 : 0);
+        metadata.set(MetadataIndex.NOGRAVITY, noGravity);
         this.noGravity = noGravity;
     }
 

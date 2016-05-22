@@ -17,7 +17,7 @@ public enum MetadataIndex {
     NAME_TAG(2, STRING, Entity.class),
     SHOW_NAME_TAG(3, BYTE, Entity.class),
     SILENT(4, BYTE, Entity.class),
-    NOGRAVITY(5, BYTE, Entity.class),
+    NOGRAVITY(5, BOOLEAN, Entity.class),
 
     //TODO 1.9 - Support this
     //AREAEFFECTCLOUD_RADIUS(5, FLOAT, Entity.class),
@@ -127,6 +127,8 @@ public enum MetadataIndex {
     GHAST_ATTACKING(12, BOOLEAN, Ghast.class),
 
     SLIME_SIZE(12, INT, Slime.class),
+
+    POLARBEAR_STANDING(13, BOOLEAN, PolarBear.class),
 
     MINECART_SHAKE_POWER(6, INT, Minecart.class),
     MINECART_SHAKE_DIRECTION(7, INT, Minecart.class),
