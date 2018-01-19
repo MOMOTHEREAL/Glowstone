@@ -82,6 +82,11 @@
       <artifactId>flow-network</artifactId>
       <version>1.2.2-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>ca.momoperes.lobster</groupId>
+      <artifactId>lobster</artifactId>
+      <version>1.0.0</version>
+    </dependency>
     <!-- Kotlin -->
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>

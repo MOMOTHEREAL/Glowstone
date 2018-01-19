@@ -1,5 +1,6 @@
 package net.glowstone.command.glowstone;
 
+import ca.momoperes.lobster.RelationshipTree;
 import com.google.common.base.Preconditions;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
@@ -13,18 +14,26 @@ import java.util.stream.Collectors;
 import net.glowstone.GlowWorld;
 import net.glowstone.command.CommandUtils;
 import net.glowstone.entity.GlowPlayer;
+import net.glowstone.entity.ai.path.ground.GroundRelationshipNode;
+import net.glowstone.entity.ai.path.ground.GroundRelationshipNodeProvider;
 import net.glowstone.util.ReflectionProcessor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.util.BlockVector;
 import org.bukkit.util.StringUtil;
+import org.bukkit.util.Vector;
 
 public class GlowstoneCommand extends BukkitCommand {
+
+    private static BlockVector PATH_START = null;
+    private static BlockVector PATH_END = null;
 
     private static final List<String> SUBCOMMANDS = Arrays
             .asList("about", "chunk", "eval", "help", "property", "vm", "world");
@@ -187,6 +196,38 @@ public class GlowstoneCommand extends BukkitCommand {
                             + "<no value>"
                             : ChatColor.AQUA + result.toString()));
             return true;
+        }
+        if ("path".equalsIgnoreCase(args[0])) {
+            World world = ((Player) sender).getWorld();
+            if (args.length == 1) {
+                // generate path
+                if (PATH_START == null) {
+                    sender.sendMessage("no start");
+                    return false;
+                }
+                if (PATH_END == null) {
+                    sender.sendMessage("no end");
+                    return false;
+                }
+                GroundRelationshipNodeProvider provider = new GroundRelationshipNodeProvider(world, PATH_START, PATH_END);
+                RelationshipTree<GroundRelationshipNode> tree = new RelationshipTree<>(provider);
+                List<GroundRelationshipNode> path = tree.createPath();
+                if (path == null) {
+                    sender.sendMessage("path impossible");
+                    return false;
+                }
+                for (GroundRelationshipNode node : path) {
+                    Vector under = node.getBlock().subtract(new Vector(0, 1, 0));
+                    world.getBlockAt(under.toLocation(world)).setType(Material.END_BRICKS);
+                }
+                sender.sendMessage("done");
+            } else if ("start".equalsIgnoreCase(args[1])) {
+                PATH_START = ((Player) sender).getLocation().toVector().toBlockVector();
+                sender.sendMessage("start placed");
+            } else if ("end".equalsIgnoreCase(args[1])) {
+                PATH_END = ((Player) sender).getLocation().toVector().toBlockVector();
+                sender.sendMessage("end placed");
+            }
         }
         sender.sendMessage(ChatColor.RED + "Usage: /" + label + " <"
                 + SUBCOMMANDS.stream().collect(Collectors.joining("|")) + ">");
